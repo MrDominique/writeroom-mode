@@ -134,8 +134,18 @@ The value can be `fullboth', in which case fullscreen is
 activated, or `maximized', in which case the relevant frame is
 maximized but window decorations are still available."
   :group 'writeroom
-  :type '(choice (const :tag "Fullscreen" fullboth)
-                 (const :tag "Maximized" maximized)))
+  :type '(choice (const :tag "True fullscreen" fullboth)
+                 (const :tag "Maximized" maximized))
+  :set #'writeroom--set-fullscreen-effect)
+
+(defun writeroom--set-fullscreen-effect (_ value)
+  "Set `writeroom-fullscreen-effect' to VALUE.
+If `(window-system)' returns `mac', `fullboth' is changed to
+`fullscreen'."
+  (when (and (eq value 'fullboth)
+             (eq (window-system) 'mac))
+    (setq value 'fullscreen))
+  (setq writeroom-fullscreen-effect value))
 
 (defcustom writeroom-border-width 30
   "Width in pixels of the border.
